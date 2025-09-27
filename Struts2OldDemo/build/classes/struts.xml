@@ -1,0 +1,33 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.custom.i18n.resources" value="global" />
+    
+    <package name="default" extends="struts-default" namespace="/">
+        <interceptors>
+           <interceptor name="logInterceptor" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
+           <interceptor-stack name="myStack">
+             <interceptor-ref name="logInterceptor"/>
+             <interceptor-ref name="defaultStack"/>
+          </interceptor-stack>       
+        </interceptors>
+        <!-- 为了启动时查看struts2的框架的log
+        <default-interceptor-ref name="myStack"/> -->
+        <action name="index">
+            <result>/index.jsp</result>
+        </action>
+        <action name="userList" class="com.example.action.UserAction" method="list">
+            <result>/userList.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="userSearch" class="com.example.action.UserAction" method="search">
+            <result>/userList.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+    </package>
+
+
+</struts>

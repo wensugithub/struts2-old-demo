@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC
+    "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtds/sql-map-2.dtd">
+<sqlMap namespace="User">
+
+    <typeAlias alias="User" type="com.example.model.User"/>
+    
+    <resultMap id="userResult" class="User">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+    </resultMap>
+    
+    <!-- 创建用户表 -->
+    <statement id="createUserTable">
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(100) NOT NULL
+        )
+    </statement>
+    
+    <!-- 添加清空用户表的语句 -->
+    <delete id="deleteAllUsers">
+        DELETE FROM users
+    </delete>
+    
+    <!-- 插入示例数据 -->
+    <insert id="insertSampleData">
+        INSERT INTO users (name, email) VALUES 
+        ('张三', 'zhangsan@example.com'),
+        ('李四', 'lisi@example.com'),
+        ('王五', 'wangwu@example.com')
+    </insert>
+    
+    <!-- 根据ID查询用户 -->
+    <select id="getUserById" resultMap="userResult" parameterClass="java.lang.Long">
+        SELECT * FROM users WHERE id = #id#
+    </select>
+    
+    <!-- 查询所有用户 -->
+    <select id="getAllUsers" resultMap="userResult">
+        SELECT * FROM users ORDER BY id
+    </select>
+    
+    <!-- 插入用户 -->
+    <insert id="insertUser" parameterClass="User">
+        INSERT INTO users (name, email) VALUES (#name#, #email#)
+        <selectKey resultClass="java.lang.Long" keyProperty="id">
+            CALL IDENTITY()
+        </selectKey>
+    </insert>
+    
+    <!-- 更新用户 -->
+    <update id="updateUser" parameterClass="User">
+        UPDATE users SET name = #name#, email = #email# WHERE id = #id#
+    </update>
+    
+    <!-- 删除用户 -->
+    <delete id="deleteUser" parameterClass="java.lang.Long">
+        DELETE FROM users WHERE id = #id#
+    </delete>
+    
+    <!-- 根据姓名查询用户 -->
+    <select id="getUserByName" resultMap="userResult" parameterClass="java.lang.String">
+        SELECT * FROM users WHERE name LIKE '%$name$%'
+    </select>
+    
+    <!-- 在User.xml的sqlMap标签内添加 -->
+    <select id="getUserCount" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM users
+    </select>
+</sqlMap>
